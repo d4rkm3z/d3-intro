@@ -1,26 +1,60 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from 'styled-components';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import { LinearGraph } from 'components/LinearGraph';
+import { ScatterPlot } from 'components/ScatterPlot';
 
-function App() {
+
+const NavBar = styled.ul`
+  display: inline-flex;
+  padding: 10px;
+  flex-direction: column;
+  background-color: lightslategrey;
+`;
+
+const RouteWrapper = styled.div`
+  text-align: center;
+`;
+
+export default function App() {
+  const routes = [
+    {
+      title: 'Linear graph',
+      path: '/linear_graph',
+      exact: true,
+      component: LinearGraph
+    },
+    {
+      title: 'Scatter plot',
+      path: '/scatter_plot',
+      exact: true,
+      component: ScatterPlot
+    }
+  ];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <NavBar>
+        {routes.map((route, index) => (
+          <li>
+            <Link key={`navbar_${index}`}
+                  to={route.path}>{route.title}</Link>
+          </li>
+        ))}
+      </NavBar>
+      <Switch>
+        {routes.map((route, index) => (
+          <Route
+            key={`routes_${index}`}
+            path={route.path}
+            exact={route.exact || false}
+          >
+            <RouteWrapper>
+              <route.component />
+            </RouteWrapper>
+          </Route>
+        ))}
+      </Switch>
+    </Router>
   );
 }
-
-export default App;
